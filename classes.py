@@ -1,18 +1,58 @@
+from abc import abstractmethod
 import pygame,sys
 
-from settings import RESOLUTION, TITLE
+from settings import BALLSIZE, PADDLESIZE, RESOLUTION, TITLE
 
+class GraphicsObj:
 
-class Ball:
-    pass
-
-class Paddle:
-    pass
-
-class Game:
-    
     contains = []
 
+    def add(self,obj):
+        self.contains.append(obj)
+    
+    # Update function that updates objects the object contains
+    def update(self):
+        for i in self.contains:
+            i.update()
+
+    # Draw function that draws objects it contains
+    def draw(self):
+        for i in self.contains:
+            i.draw()
+
+
+class Ball(GraphicsObj):
+    
+    def __init__(self,parent, size = BALLSIZE):
+        self.parent = parent
+        self.size = size
+
+        if parent:
+            parent.add(self)
+
+    def update():
+        super().update()
+
+    def draw():
+        super().draw()
+
+class Paddle(GraphicsObj):
+    
+    def __init__(self,parent, size = PADDLESIZE):
+        self.parent = parent
+        self.size = size
+
+        if parent:
+            parent.add(self)
+
+    def update():
+        super().update()
+
+    def draw():
+        super().draw()
+
+class Game(GraphicsObj):
+    
     def __init__(self, running = True):
         pygame.init()
 
@@ -25,28 +65,17 @@ class Game:
         if running:
             self.run()
         
-    # Function that updates the code and objects of the game class
     def update(self):
 
-        # Put game updates here
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
-        # Updates the objects it contains
-        for i in self.contains:
-            i.update()
+        super().update()
 
-    # Function that draws objects and things within the game class
     def draw(self):
-
-        # Put game draw stuff here
-
-        # Draws the objects the game class contains
-        for i in self.contains:
-            i.update()
-
+        super().draw()
         pygame.display.flip()
         self.clock.tick(60)
 
