@@ -1,7 +1,7 @@
 from abc import abstractmethod
 import pygame,sys
 
-from settings import BALLSIZE, PADDLESIZE, RESOLUTION, TITLE
+from settings import BALLSIZE, BGCOLOR, PADDLESIZE, RESOLUTION, TITLE
 
 class GraphicsObj:
 
@@ -75,8 +75,12 @@ class Game(GraphicsObj):
         super().update()
 
     def draw(self):
+
+        self.screen.fill(BGCOLOR)
+
         super().draw()
         pygame.display.flip()
+
         self.clock.tick(60)
 
     def run(self):
