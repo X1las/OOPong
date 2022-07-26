@@ -79,6 +79,9 @@ class Game(RuntimeObj):
 
         if running:
             self.run()
+
+        if gameState == "DEFAULT":
+            self.defaultStart()
         
     def update(self):
 
@@ -105,3 +108,7 @@ class Game(RuntimeObj):
             self.update()
             self.draw()
 
+    def defaultStart(self):
+        self.contains[0] = Ball(self)
+        self.contains[1] = Paddle(self, 5, ai = False)
+        self.contains[2] = Paddle(self, RESOLUTION[0]-5-PADDLESIZE[0])
