@@ -1,11 +1,13 @@
-from abc import abstractmethod
+from email.policy import default
 import pygame,sys
 
 from settings import BALLSIZE, BGCOLOR, PADDLESIZE, RESOLUTION, TITLE
 
-class GraphicsObj:
+class RuntimeObj:
 
+    pos = [0,0]
     contains = []
+    parent = None
 
     def add(self,obj):
         self.contains.append(obj)
@@ -21,39 +23,52 @@ class GraphicsObj:
             i.draw()
 
 
-class Ball(GraphicsObj):
+class Ball(RuntimeObj):
     
-    def __init__(self,parent, size = BALLSIZE):
+    def __init__(self,runtime, parent = None, size = BALLSIZE):
         self.parent = parent
         self.size = size
+        self.runtime = runtime
+
+        if parent:
+            parent.add(self)
+        
+        if runtime:
+            runtime.add(self)
+
+        self.pos = [RESOLUTION[0]/2,RESOLUTION[1]/2]
+
+    def update(self):
+        pass
+
+    def draw(self):
+        pygame.draw.rect(self.runtime.screen)
+
+class Paddle(RuntimeObj):
+    
+    def __init__(self,runtime, xstart, parent = None, ai = True, size = PADDLESIZE):
+        self.parent = parent
+        self.size = size
+        self.runtime = runtime
+        self.ai = ai
 
         if parent:
             parent.add(self)
 
-    def update():
-        super().update()
-
-    def draw():
-        super().draw()
-
-class Paddle(GraphicsObj):
-    
-    def __init__(self,parent, size = PADDLESIZE):
-        self.parent = parent
-        self.size = size
-
-        if parent:
-            parent.add(self)
+        if runtime:
+            runtime.add(self)
+        
+        self.pos = [xstart,RESOLUTION[1]/2]
 
     def update():
-        super().update()
+        pass
 
     def draw():
-        super().draw()
+        pass
 
-class Game(GraphicsObj):
+class Game(RuntimeObj):
     
-    def __init__(self, running = True):
+    def __init__(self, running = True, gameState = "DEFAULT"):
         pygame.init()
 
         self.running = running
