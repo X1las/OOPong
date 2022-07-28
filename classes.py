@@ -1,7 +1,7 @@
 from email.policy import default
 import pygame,sys
 
-from settings import BALLSIZE, BGCOLOR, PADDLESIZE, RESOLUTION, TITLE
+from settings import BALLCOLOR, BALLSIZE, BGCOLOR, PADDLECOLOR, PADDLESIZE, RESOLUTION, TITLE
 
 class RuntimeObj:
 
@@ -25,10 +25,11 @@ class RuntimeObj:
 
 class Ball(RuntimeObj):
     
-    def __init__(self,runtime, parent = None, size = BALLSIZE):
+    def __init__(self,runtime, parent = None, size = BALLSIZE, color = BALLCOLOR):
         self.parent = parent
         self.size = size
         self.runtime = runtime
+        self.color = color
 
         if parent:
             parent.add(self)
@@ -42,15 +43,16 @@ class Ball(RuntimeObj):
         pass
 
     def draw(self):
-        pygame.draw.rect(self.runtime.screen)
+        pygame.draw.rect(self.runtime.screen, self.color, pygame.Rect(self.pos[0],self.pos[1], self.size[0],self.size[1]))
 
 class Paddle(RuntimeObj):
     
-    def __init__(self,runtime, xstart, parent = None, ai = True, size = PADDLESIZE):
+    def __init__(self,runtime, xstart, parent = None, ai = True, size = PADDLESIZE, color = PADDLECOLOR):
         self.parent = parent
         self.size = size
         self.runtime = runtime
         self.ai = ai
+        self.color = color
 
         if parent:
             parent.add(self)
@@ -60,15 +62,16 @@ class Paddle(RuntimeObj):
         
         self.pos = [xstart,RESOLUTION[1]/2]
 
-    def update():
+    def update(self):
         pass
 
-    def draw():
-        pass
+    def draw(self):
+        pygame.draw.rect(self.runtime.screen, self.color, pygame.Rect(self.pos[0],self.pos[1], self.size[0],self.size[1]))
 
 class Game(RuntimeObj):
     
     def __init__(self, running = True, gameState = "DEFAULT"):
+
         pygame.init()
 
         self.running = running
@@ -77,11 +80,11 @@ class Game(RuntimeObj):
         
         pygame.display.set_caption(TITLE)
 
-        if running:
-            self.run()
-
         if gameState == "DEFAULT":
             self.defaultStart()
+
+        if running:
+            self.run()
         
     def update(self):
 
@@ -109,6 +112,6 @@ class Game(RuntimeObj):
             self.draw()
 
     def defaultStart(self):
-        self.contains[0] = Ball(self)
-        self.contains[1] = Paddle(self, 5, ai = False)
-        self.contains[2] = Paddle(self, RESOLUTION[0]-5-PADDLESIZE[0])
+        self.contains.append(Ball(self))
+        self.contains.append(Paddle(self, 5, ai = False))
+        self.contains.append(Paddle(self, RESOLUTION[0]-5-PADDLESIZE[0]))
